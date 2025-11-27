@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title">Каталог автомобилей</h2>
+    
+    <div class="car-grid">
+        {% for car in cars %}
+        <div class="car-card">
+            {% if car.main_image %}
+                <img src="{{ car.main_image.url }}" alt="{{ car.brand }}" class="car-image">
+            {% else %}
+                <div style="height:200px; background: #222; display:flex; align-items:center; justify-content:center; color:#555;">Нет фото</div>
+            {% endif %}
+            
+            <div class="car-info">
+                <div class="car-brand">{{ car.brand }}</div>
+                <h3 class="car-title">{{ car.model }}</h3>
+                
+                <div class="car-specs">
+                    <span>{{ car.year }} г.</span>
+                    <span>{{ car.engine_power }} л.с.</span> </div>
+                
+                <div class="car-price">{{ car.price }} ₽</div>
+                
+                <a href="{% url 'car_detail' car.slug %}" class="btn-card">Подробнее</a>
+            </div>
+        </div>
+        {% empty %}
+            <p>Автомобили пока не добавлены.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

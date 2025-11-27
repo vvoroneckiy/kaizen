@@ -1,0 +1,20 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2 style="text-align: center; color: var(--neon-purple);">Регистрация</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div style="color: #ff4444; font-size: 0.8rem;">{{ field.errors }}</div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Создать аккаунт</button>
+    </form>
+</div>
+{% endblock %}

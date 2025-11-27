@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIZEN | {% block title %}Premium Tuning{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <a href="{% url 'home' %}" class="logo">Kai<span>zen</span></a>
+        <nav>
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'catalog' %}">Каталог</a>
+            
+            {% if user.is_authenticated %}
+                <span style="color: #666; margin-left: 20px;">|</span>
+                <a href="#" style="color: var(--neon-blue);">{{ user.username }}</a>
+                <a href="{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+                <a href="{% url 'register' %}" class="btn-primary" style="padding: 5px 15px; border-width: 1px; font-size: 0.8rem; margin-left: 10px;">Регистрация</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: #555; border-top: 1px solid #333; margin-top: 4rem;">
+        <p>&copy; 2024 KAIZEN Tuning Shop. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

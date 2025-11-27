@@ -1,0 +1,237 @@
+/* static/css/style.css */
+
+:root {
+    --bg-dark: #0a0a0a;       /* Почти черный фон */
+    --bg-card: #141414;       /* Фон карточек */
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --neon-blue: #00f3ff;     /* Неоновый голубой (акцент) */
+    --neon-purple: #bc13fe;   /* Неоновый фиолетовый */
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* --- Хедер --- */
+header {
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom: 1px solid #333;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-main);
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+.logo span { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+
+nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 2rem;
+    font-weight: 500;
+    transition: var(--transition);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+nav a:hover { color: var(--neon-blue); text-shadow: 0 0 8px var(--neon-blue); }
+
+/* --- Герой (Hero Section) --- */
+.hero {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: fadeIn 1s ease-out;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    animation: slideUp 1s ease-out;
+}
+
+/* Кнопки CTA */
+.btn {
+    padding: 12px 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: transparent;
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 25px var(--neon-blue);
+}
+
+/* --- Каталог (Сетка) --- */
+.container {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--neon-purple);
+    padding-left: 1rem;
+}
+
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Карточка товара */
+.car-card {
+    background: var(--bg-card);
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: var(--transition);
+    position: relative;
+}
+
+.car-card:hover {
+    transform: translateY(-5px); /* Легкое поднятие [cite: 79] */
+    border-color: var(--neon-blue);
+    box-shadow: 0 5px 20px rgba(0, 243, 255, 0.15);
+}
+
+.car-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.car-info { padding: 1.5rem; }
+
+.car-brand {
+    color: var(--neon-blue);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.car-title {
+    font-size: 1.4rem;
+    margin: 0.5rem 0;
+    color: #fff;
+}
+
+.car-specs {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.car-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.btn-card {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #222;
+    color: #fff;
+    padding: 10px 0;
+    margin-top: 1rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-card:hover {
+    background: var(--neon-purple);
+    color: #fff;
+}
+
+/* Анимации */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- Формы (Вход/Регистрация) --- */
+.form-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 1rem;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+    box-sizing: border-box; /* Важно, чтобы padding не ломал ширину */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
