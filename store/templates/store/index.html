@@ -3,25 +3,58 @@
 {% block content %}
 <section class="hero">
     <div class="hero-content">
-        <h1>Технологичность.<br>Эксклюзивность.<br><span style="color: var(--neon-blue);">Мощь.</span></h1>
-        <p>Лучшие тюнингованные автомобили мира в одном месте.</p>
-        <div style="margin-top: 2rem;">
-            <a href="{% url 'catalog' %}" class="btn btn-primary">Смотреть каталог</a> </div>
+        <h1>KAIZEN<br><span style="color: var(--neon-blue); font-size: 2rem; letter-spacing: 5px;">AUTOMOTIVE ART</span></h1>
+        <p>Искусство тюнинга. Абсолютная эксклюзивность.</p>
+        <a href="{% url 'catalog' %}" class="btn btn-primary" style="margin-top: 1rem;">Выбрать автомобиль</a>
     </div>
 </section>
 
 <section style="background: #111; padding: 3rem 0; text-align: center; display: flex; justify-content: center; gap: 4rem; border-bottom: 1px solid #222;">
-    <div>
-        <h2 style="font-size: 2.5rem; margin: 0; color: var(--neon-purple);">200+</h2>
-        <span style="color: #888;">Проектов</span>
+    <div><h2 style="color:var(--neon-purple); font-size:2.5rem; margin:0;">200+</h2><span style="color:#888">Проектов</span></div>
+     <div><h2 style="color:var(--neon-blue); font-size:2.5rem; margin:0;">50+</h2><span style="color:#888">Клиентов</span></div>
+     <div><h2 style="color:#fff; font-size:2.5rem; margin:0;">15</h2><span style="color:#888">Брендов</span></div>
+</section>
+
+<section class="container" style="padding: 4rem 20px; text-align: center;">
+    <h2 class="section-title" style="text-align: center; border: none;">Философия KAIZEN</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem;">
+        <div style="padding: 2rem; background: var(--bg-card); border: 1px solid #333; border-radius: 8px;">
+            <h3 style="color: var(--neon-blue);">Технологичность</h3>
+            <p style="color: #a0a0a0;">Мы используем только передовые запчасти и современное ПО для настройки.</p>
+        </div>
+        <div style="padding: 2rem; background: var(--bg-card); border: 1px solid #333; border-radius: 8px;">
+            <h3 style="color: var(--neon-purple);">Стиль</h3>
+            <p style="color: #a0a0a0;">Уникальный визуальный язык, который выделяет вас в потоке.</p>
+        </div>
+        <div style="padding: 2rem; background: var(--bg-card); border: 1px solid #333; border-radius: 8px;">
+            <h3 style="color: #fff;">Мощь</h3>
+            <p style="color: #a0a0a0;">Раскрываем потенциал двигателя на 100% без ущерба ресурсу.</p>
+        </div>
     </div>
-    <div>
-        <h2 style="font-size: 2.5rem; margin: 0; color: var(--neon-blue);">50+</h2>
-        <span style="color: #888;">Клиентов</span>
+</section>
+
+<section class="container" style="padding-bottom: 4rem;">
+    <h2 class="section-title">Свежие поступления</h2>
+    <div class="car-grid">
+        {% for car in featured_cars %}
+             <div class="car-card">
+                {% if car.main_image %}
+                    <img src="{{ car.main_image.url }}" class="car-image">
+                {% endif %}
+                <div class="car-info">
+                    <div class="car-brand">{{ car.brand }}</div>
+                    <h3 class="car-title">{{ car.model }}</h3>
+                    <div class="car-price">{{ car.price }} ₽</div>
+                    <a href="{% url 'car_detail' car.slug %}" class="btn-card">Смотреть</a>
+                </div>
+             </div>
+        {% endfor %}
     </div>
-    <div>
-        <h2 style="font-size: 2.5rem; margin: 0; color: #fff;">15</h2>
-        <span style="color: #888;">Брендов</span>
-    </div>
+</section>
+
+<section style="background: linear-gradient(45deg, #000, #1a0b2e); padding: 5rem 0; text-align: center;">
+    <h2 style="font-size: 3rem; margin-bottom: 1rem;">Найдите свой идеал</h2>
+    <p style="color: #ccc; margin-bottom: 2rem;">Ваш будущий автомобиль уже ждет вас в нашем шоуруме.</p>
+    <a href="{% url 'catalog' %}" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.2rem;">Перейти в каталог</a>
 </section>
 {% endblock %}

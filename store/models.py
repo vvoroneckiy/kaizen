@@ -90,3 +90,28 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.car.brand} {self.car.model}"
+
+# 5. Корзина
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_total_price(self):
+        return sum(item.get_cost() for item in self.items.all())
+    
+    def get_total_items(self):
+        return sum(item.quantity for item in self.items.all())
+
+    def __str__(self):
+        return f"Корзина {self.user.username}"
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1) # На случай, если можно купить 2 одинаковые машины
+
+    def get_cost(self):
+        return self.car.price * self.quantity
+
+    def __str__(self):
+        return f"{self.quantity} x {self.car.brand} {self.car.model}"

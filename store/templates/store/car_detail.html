@@ -4,42 +4,111 @@
 
 {% block content %}
 <div class="container" style="margin-top: 2rem;">
-    <a href="{% url 'catalog' %}" style="color: var(--text-muted); text-decoration: none;">&larr; Назад в каталог</a>
+    
+    <a href="{% url 'catalog' %}" style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 2rem; transition: 0.3s;">
+        <span style="font-size: 1.2rem; margin-right: 5px;">&larr;</span> Назад в каталог
+    </a>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 3rem; margin-top: 2rem;">
+    <div style="display: flex; flex-wrap: wrap; gap: 4rem; margin-bottom: 4rem;">
         
-        <div style="flex: 1; min-width: 300px;">
-            {% if car.main_image %}
-                <img src="{{ car.main_image.url }}" alt="{{ car.model }}" style="width: 100%; border-radius: 8px; border: 1px solid #333;">
-            {% endif %}
+        <div style="flex: 1; min-width: 350px;">
+            <div style="position: sticky; top: 100px; border: 1px solid #333; border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+                {% if car.main_image %}
+                    <img src="{{ car.main_image.url }}" alt="{{ car.brand }} {{ car.model }}" style="width: 100%; height: auto; display: block;">
+                {% else %}
+                    <div style="height: 400px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: #555;">
+                        Фото недоступно
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
-        <div style="flex: 1; min-width: 300px;">
-            <h1 style="font-size: 2.5rem; margin: 0;">{{ car.brand }} {{ car.model }}</h1>
-            <p style="color: var(--neon-blue); font-size: 1.2rem; margin-top: 0.5rem;">{{ car.year }} год / {{ car.body_type }}</p>
+        <div style="flex: 1; min-width: 350px;">
+            <div style="border-bottom: 1px solid #333; padding-bottom: 1rem; margin-bottom: 2rem;">
+                <h1 style="font-size: 3rem; margin: 0; line-height: 1.1;">{{ car.brand }} {{ car.model }}</h1>
+                <p style="color: var(--neon-blue); font-size: 1.4rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">
+                    {{ car.year }} / {{ car.body_type }}
+                </p>
+            </div>
             
-            <h2 style="font-size: 3rem; margin: 1rem 0; color: #fff;">{{ car.price }} ₽</h2>
+            <div style="margin-bottom: 2rem;">
+                <h2 style="font-size: 3.5rem; margin: 0; color: #fff; font-weight: 700;">{{ car.price }} ₽</h2>
+                <p style="color: #666; font-size: 0.9rem;">Включая НДС и таможенное оформление</p>
+            </div>
 
-            <button class="btn btn-primary" style="width: 100%; margin-bottom: 2rem;">Добавить в корзину</button>
+            <a href="{% url 'add_to_cart' car.id %}" class="btn btn-primary" style="display: block; text-align: center; padding: 18px; font-size: 1.2rem; margin-bottom: 3rem;">
+                Добавить в корзину
+            </a>
 
-            <div style="background: #141414; padding: 1.5rem; border-radius: 8px; border: 1px solid #333;">
-                <h3 style="color: var(--neon-purple); margin-top: 0;">Спецификация</h3>
-                <ul style="list-style: none; padding: 0; color: #ccc;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Мощность:</strong> {{ car.engine_power }} л.с.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Пробег:</strong> {{ car.mileage }} км</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Цвет:</strong> {{ car.color }}</li>
+            <div style="background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid #222; margin-bottom: 2rem;">
+                <h3 style="color: var(--neon-purple); margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Спецификация</h3>
+                <ul style="list-style: none; padding: 0; color: #ccc; font-size: 1.1rem;">
+                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
+                        <span style="color: #777;">Мощность</span>
+                        <span>{{ car.engine_power }} л.с.</span>
+                    </li>
+                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
+                        <span style="color: #777;">Пробег</span>
+                        <span>{{ car.mileage }} км</span>
+                    </li>
+                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
+                        <span style="color: #777;">Цвет</span>
+                        <span>{{ car.color }}</span>
+                    </li>
+                     <li style="display: flex; justify-content: space-between; padding: 10px 0;">
+                        <span style="color: #777;">Категория</span>
+                        <span>{{ car.category.name }}</span>
+                    </li>
                 </ul>
             </div>
 
-            <div style="margin-top: 2rem;">
-                <h3>Детали тюнинга</h3>
-                <p style="color: #a0a0a0; line-height: 1.8;">{{ car.tuning_details|linebreaks }}</p>
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; border-left: 3px solid var(--neon-blue); padding-left: 1rem; margin-bottom: 1rem;">Детали тюнинга</h3>
+                <div style="color: #a0a0a0; line-height: 1.8; font-size: 1.05rem;">
+                    {{ car.tuning_details|linebreaks }}
+                </div>
             </div>
-             <div style="margin-top: 2rem;">
-                <h3>Описание</h3>
-                <p style="color: #a0a0a0; line-height: 1.8;">{{ car.description|linebreaks }}</p>
+
+             <div>
+                <h3 style="font-size: 1.5rem; border-left: 3px solid #fff; padding-left: 1rem; margin-bottom: 1rem;">Описание авто</h3>
+                <div style="color: #a0a0a0; line-height: 1.8;">
+                    {{ car.description|linebreaks }}
+                </div>
             </div>
         </div>
     </div>
+
+    {% if related_cars %}
+    <div style="margin-top: 6rem; border-top: 1px solid #333; padding-top: 4rem; padding-bottom: 4rem;">
+        <h3 style="font-size: 2.2rem; margin-bottom: 2rem; color: #fff; text-align: center;">Вам также может понравиться</h3>
+        
+        <div class="car-grid">
+            {% for rel_car in related_cars %}
+                <div class="car-card">
+                    {% if rel_car.main_image %}
+                        <img src="{{ rel_car.main_image.url }}" alt="{{ rel_car.model }}" class="car-image">
+                    {% else %}
+                        <div style="height:200px; background: #222; display:flex; align-items:center; justify-content:center; color:#555;">Нет фото</div>
+                    {% endif %}
+                    
+                    <div class="car-info">
+                        <div class="car-brand">{{ rel_car.brand }}</div>
+                        <h3 class="car-title">{{ rel_car.model }}</h3>
+                        
+                        <div class="car-specs" style="margin-bottom: 0.5rem;">
+                            <span>{{ rel_car.year }}</span>
+                            <span>{{ rel_car.engine_power }} л.с.</span>
+                        </div>
+
+                        <div class="car-price">{{ rel_car.price }} ₽</div>
+                        
+                        <a href="{% url 'car_detail' rel_car.slug %}" class="btn-card">Смотреть</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}
