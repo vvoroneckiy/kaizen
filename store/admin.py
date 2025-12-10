@@ -3,8 +3,8 @@ from .models import Category, Car, Profile, Order, OrderItem
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'model', 'year', 'price', 'is_available')
-    list_filter = ('brand', 'year', 'body_type') # Фильтры в админке [cite: 11]
+    list_display = ('brand', 'model', 'year', 'price', 'is_available', 'country')
+    list_filter = ('brand', 'year', 'body_type', 'country') # Фильтры в админке [cite: 11]
     search_fields = ('brand', 'model', 'tuning_details')
     prepopulated_fields = {'slug': ('brand', 'model', 'year')} # Авто-заполнение URL
 

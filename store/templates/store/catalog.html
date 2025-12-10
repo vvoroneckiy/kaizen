@@ -6,31 +6,83 @@
 <div class="container">
     <h2 class="section-title">Каталог автомобилей</h2>
     
-    <div class="car-grid">
-        {% for car in cars %}
-        <div class="car-card">
-            {% if car.main_image %}
-                <img src="{{ car.main_image.url }}" alt="{{ car.brand }}" class="car-image">
-            {% else %}
-                <div style="height:200px; background: #222; display:flex; align-items:center; justify-content:center; color:#555;">Нет фото</div>
-            {% endif %}
+    <div class="catalog-content">
+        
+        <div class="sidebar">
+            <h3 style="margin-top: 0; color: var(--neon-blue); font-size: 1.5rem;">Фильтры</h3>
             
-            <div class="car-info">
-                <div class="car-brand">{{ car.brand }}</div>
-                <h3 class="car-title">{{ car.model }}</h3>
+            <form method="get" action="{% url 'catalog' %}">
                 
-                <div class="car-specs">
-                    <span>{{ car.year }} г.</span>
-                    <span>{{ car.engine_power }} л.с.</span> </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="{{ form.category.id_for_label }}">Категория</label>
+                    {{ form.category }}
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="{{ form.brand.id_for_label }}">Марка</label>
+                    {{ form.brand }}
+                </div>
                 
-                <div class="car-price">{{ car.price }} ₽</div>
+                <div class="filter-group">
+                    <label class="filter-label" for="{{ form.country.id_for_label }}">Страна</label>
+                    {{ form.country }}
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Цена (₽)</label>
+                    <div class="price-range-group">
+                        {{ form.price_min }}
+                        {{ form.price_max }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Применить</button>
                 
-                <a href="{% url 'car_detail' car.slug %}" class="btn-card">Подробнее</a>
-            </div>
+                {% if request.GET %}
+                <a href="{% url 'catalog' %}" style="display: block; text-align: center; margin-top: 10px; color: var(--text-muted);">
+                    Сбросить
+                </a>
+                {% endif %}
+
+            </form>
         </div>
-        {% empty %}
-            <p>Автомобили пока не добавлены.</p>
-        {% endfor %}
+
+        <div style="flex-grow: 1;">
+            {% if cars %}
+                <p style="color: var(--text-muted);">Найдено автомобилей: {{ cars|length }}</p>
+                <div class="car-grid">
+                    {% for car in cars %}
+                    <div class="car-card">
+                        {% if car.main_image %}
+                            <img src="{{ car.main_image.url }}" alt="{{ car.brand }}" class="car-image">
+                        {% else %}
+                            <div style="height:200px; background: #222; display:flex; align-items:center; justify-content:center; color:#555;">Нет фото</div>
+                        {% endif %}
+                        
+                        <div class="car-info">
+                            <div class="car-brand">{{ car.brand }}</div>
+                            <h3 class="car-title">{{ car.model }}</h3>
+                            
+                            <div class="car-specs">
+                                <span>{{ car.year }} г.</span>
+                                <span>{{ car.engine_power }} л.с.</span>
+                            </div>
+                            
+                            <div class="car-price">{{ car.price }} ₽</div>
+                            
+                            <a href="{% url 'car_detail' car.slug %}" class="btn-card">Подробнее</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; margin-top: 50px;">
+                    <h3 style="color: #666;">По вашему запросу ничего не найдено.</h3>
+                    <p style="color: #999;">Попробуйте сбросить фильтры или изменить условия поиска.</p>
+                </div>
+            {% endif %}
+        </div>
+        
     </div>
 </div>
 {% endblock %}

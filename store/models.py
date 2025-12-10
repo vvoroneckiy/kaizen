@@ -22,6 +22,7 @@ class Car(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='cars', verbose_name="Категория")
     brand = models.CharField("Марка", max_length=50) # Audi, BMW
     model = models.CharField("Модель", max_length=50) # RS6, M5
+    country = models.CharField("Страна производителя", max_length=50, default="Неуказанно")
     slug = models.SlugField(unique=True, verbose_name="URL-метка")
     
     # Спецификации [cite: 15]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, CarFilterForm
 from django.contrib.auth.decorators import login_required
 from .models import Car, Cart, CartItem
 
@@ -82,3 +82,47 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     item.delete()
     return redirect('cart_detail')
+
+def catalog(request):
+    # Начинаем с полного списка доступных машин
+    cars = Car.objects.filter(is_available=True)
+    
+    # Инициализируем форму, передавая GET-параметры (если они есть)
+    form = CarFilterForm(request.GET)
+    
+    # Создаем контейнер для фильтрации
+    filter_params = {}
+    
+    if form.is_valid():
+        # 1. Фильтр по Категории
+        category = form.cleaned_data.get('category')
+        if category:
+            filter_params['category'] = category
+            
+        # 2. Фильтр по Марке
+        brand = form.cleaned_data.get('brand')
+        if brand:
+            filter_params['brand__iexact'] = brand # __iexact для нечувствительности к регистру
+            
+        # 3. Фильтр по Стране
+        country = form.cleaned_data.get('country')
+        if country:
+            filter_params['country__iexact'] = country
+            
+        # 4. Фильтр по Цене (от)
+        price_min = form.cleaned_data.get('price_min')
+        if price_min is not None:
+            filter_params['price__gte'] = price_min # greater than or equal
+            
+        # 5. Фильтр по Цене (до)
+        price_max = form.cleaned_data.get('price_max')
+        if price_max is not None:
+            filter_params['price__lte'] = price_max # less than or equal
+            
+        # Применяем все собранные фильтры к QuerySet
+        cars = cars.filter(**filter_params)
+        
+    return render(request, 'store/catalog.html', {
+        'cars': cars,
+        'form': form, # Передаем форму в шаблон для отображения
+    })
