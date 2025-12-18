@@ -26,7 +26,7 @@
                 
                 <span style="color: #666; margin: 0 10px;">/</span>
                 
-                <a href="#" style="color: var(--neon-blue); font-weight: bold;">{{ user.username }}</a>
+                <a href="{% url 'profile' %}" style="color: var(--neon-blue); font-weight: bold;">{{ user.username }}</a>
                 <a href="{% url 'logout' %}" style="font-size: 0.9rem; color: #666;">Выйти</a>
             {% else %}
                 <a href="{% url 'login' %}">Войти</a>

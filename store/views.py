@@ -3,7 +3,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserRegistrationForm, CarFilterForm
 from django.contrib.auth.decorators import login_required
-from .models import Car, Cart, CartItem
+from .models import Car, Cart, CartItem, Order, OrderItem
+
 
 def home(request):
     # Получаем 3 последних добавленных авто для "Слайдера/Героя"
@@ -125,4 +126,48 @@ def catalog(request):
     return render(request, 'store/catalog.html', {
         'cars': cars,
         'form': form, # Передаем форму в шаблон для отображения
+    })
+
+@login_required(login_url='login')
+def checkout(request):
+    # 1. Получаем корзину
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    
+    # Если корзина пуста, редиректим обратно
+    if not cart.items.exists():
+        return redirect('cart_detail')
+
+    # 2. Создаем Заказ
+    order = Order.objects.create(
+        user=request.user,
+        total_price=cart.get_total_price(),
+        status='new'
+    )
+
+    # 3. Переносим товары из Корзины в OrderItem
+    for item in cart.items.all():
+        OrderItem.objects.create(
+            order=order,
+            car=item.car,
+            price=item.car.price
+        )
+    
+    # 4. Очищаем корзину
+    cart.items.all().delete()
+
+    # 5. Редирект в личный кабинет (или на страницу успеха)
+    return redirect('profile')
+
+@login_required(login_url='login')
+def profile_view(request):
+    # Получаем все заказы пользователя, от новых к старым
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Разделяем на Действующие и Завершенные
+    active_orders = orders.filter(status__in=['new', 'processing'])
+    history_orders = orders.filter(status__in=['shipped', 'cancelled'])
+
+    return render(request, 'store/profile.html', {
+        'active_orders': active_orders,
+        'history_orders': history_orders
     })

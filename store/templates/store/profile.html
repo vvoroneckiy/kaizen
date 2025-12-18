@@ -1,0 +1,66 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title">Личный кабинет</h2>
+
+    <div style="background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid #333; margin-bottom: 3rem;">
+        <h3 style="color: var(--neon-blue); margin-top: 0;">Привет, {{ user.username }}!</h3>
+        <p style="color: #888;">Email: {{ user.email }}</p>
+    </div>
+
+    <h3 style="color: #fff; border-left: 4px solid var(--neon-blue); padding-left: 1rem; margin-bottom: 1.5rem;">Действующие заказы</h3>
+    
+    {% if active_orders %}
+        {% for order in active_orders %}
+        <div style="background: #111; border: 1px solid var(--neon-blue); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                <span style="font-weight: bold; color: #fff;">Заказ #{{ order.id }}</span>
+                <span style="color: var(--neon-blue);">Статус: {{ order.get_status_display }}</span>
+            </div>
+            
+            <ul style="list-style: none; padding: 0; color: #ccc;">
+                {% for item in order.items.all %}
+                <li style="margin-bottom: 5px;">
+                    &bull; {{ item.car.brand }} {{ item.car.model }} — {{ item.price }} ₽
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <div style="text-align: right; margin-top: 1rem; font-size: 1.2rem;">
+                Итого: <strong style="color: #fff;">{{ order.total_price }} ₽</strong>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #666; margin-bottom: 3rem;">У вас пока нет действующих заказов.</p>
+    {% endif %}
+
+
+    <h3 style="color: #fff; border-left: 4px solid #666; padding-left: 1rem; margin-bottom: 1.5rem; margin-top: 3rem;">История заказов</h3>
+    
+    {% if history_orders %}
+        {% for order in history_orders %}
+        <div style="background: var(--bg-card); border: 1px solid #333; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; opacity: 0.7;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-weight: bold; color: #aaa;">Заказ #{{ order.id }} ({{ order.created_at|date:"d.m.Y" }})</span>
+                
+                {% if order.status == 'cancelled' %}
+                    <span style="color: #ff4444;">{{ order.get_status_display }}</span>
+                {% else %}
+                    <span style="color: #00ff00;">{{ order.get_status_display }}</span>
+                {% endif %}
+            </div>
+            <div style="font-size: 0.9rem; color: #888;">
+                 Сумма: {{ order.total_price }} ₽
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #666;">История заказов пуста.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
