@@ -57,14 +57,20 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-@login_required(login_url='login') # Только для авторизованных
+@login_required(login_url='login')
 def add_to_cart(request, car_id):
     car = get_object_or_404(Car, id=car_id)
-    # Получаем или создаем корзину для пользователя
     cart, created = Cart.objects.get_or_create(user=request.user)
     
-    # Проверяем, есть ли уже этот авто в корзине
-    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, car=car)
+    # Получаем тип тюнинга из формы (если метода POST нет, то 'base')
+    tuning_choice = request.POST.get('tuning_type', 'base')
+    
+    # Ищем, есть ли уже такая машина С ТАКИМ ЖЕ тюнингом в корзине
+    cart_item, item_created = CartItem.objects.get_or_create(
+        cart=cart, 
+        car=car,
+        tuning_type=tuning_choice # Важно! Разные тюнинги - разные позиции
+    )
     
     if not item_created:
         cart_item.quantity += 1
@@ -149,7 +155,8 @@ def checkout(request):
         OrderItem.objects.create(
             order=order,
             car=item.car,
-            price=item.car.price
+            price=item.get_cost(), # Берем пересчитанную цену
+            tuning_type=item.tuning_type # Переносим тип тюнинга
         )
     
     # 4. Очищаем корзину

@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from decimal import Decimal
+
+TUNING_CHOICES = [
+    ('base', 'Базовая комплектация'),
+    ('standard', 'Standard Tuning (+15%)'),
+    ('premium', 'Premium Tuning (+30%)'),
+]
 
 # 1. Категории (Марки или классы авто) [cite: 105]
 class Category(models.Model):
@@ -85,11 +92,13 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Автомобиль")
-    price = models.DecimalField("Цена на момент покупки", max_digits=12, decimal_places=2)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    # Новое поле
+    tuning_type = models.CharField(max_length=10, choices=TUNING_CHOICES, default='base')
 
     def __str__(self):
-        return f"{self.car.brand} {self.car.model}"
+        return f"{self.car.brand} ({self.tuning_type})"
 
 # 5. Корзина
 class Cart(models.Model):
@@ -97,7 +106,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_total_price(self):
-        return sum(item.get_cost() for item in self.items.all())
+        return sum(item.get_total_item_price() for item in self.items.all())
     
     def get_total_items(self):
         return sum(item.quantity for item in self.items.all())
@@ -108,10 +117,22 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1) # На случай, если можно купить 2 одинаковые машины
+    quantity = models.PositiveIntegerField(default=1)
+
+    # Новое поле
+    tuning_type = models.CharField(max_length=10, choices=TUNING_CHOICES, default='base')
 
     def get_cost(self):
-        return self.car.price * self.quantity
-
-    def __str__(self):
-        return f"{self.quantity} x {self.car.brand} {self.car.model}"
+        base_price = self.car.price
+        # Превращаем множители в Decimal (строки '1.15' обязательны для точности)
+        if self.tuning_type == 'standard':
+            price = base_price * Decimal('1.15')
+        elif self.tuning_type == 'premium':
+            price = base_price * Decimal('1.30')
+        else:
+            price = base_price
+        return int(price) # Возвращаем цену за 1 шт.
+    
+    def get_total_item_price(self):
+        """Возвращает общую стоимость позиции (цена с тюнингом * количество) [cite: 17, 115]"""
+        return self.get_cost() * self.quantity

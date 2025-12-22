@@ -32,35 +32,69 @@
             </div>
             
             <div style="margin-bottom: 2rem;">
-                <h2 style="font-size: 3.5rem; margin: 0; color: #fff; font-weight: 700;">{{ car.price }} ₽</h2>
-                <p style="color: #666; font-size: 0.9rem;">Включая НДС и таможенное оформление</p>
+                <h2 id="dynamic-price" style="font-size: 3.5rem; margin: 0; color: #fff; font-weight: 700;">{{ car.price }} ₽</h2>
+                <p style="color: #666; font-size: 0.9rem;">Включая НДС и выбранный пакет тюнинга</p>
             </div>
 
-            <a href="{% url 'add_to_cart' car.id %}" class="btn btn-primary" style="display: block; text-align: center; padding: 18px; font-size: 1.2rem; margin-bottom: 3rem;">
-                Добавить в корзину
-            </a>
+            <form method="post" action="{% url 'add_to_cart' car.id %}">
+                {% csrf_token %}
+                
+                <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid #333; margin-bottom: 2rem;">
+                    <h3 style="color: var(--neon-blue); margin-top: 0; margin-bottom: 1rem;">Выберите комплектацию:</h3>
+                    
+                    <label class="tuning-option" style="display: flex; justify-content: space-between; padding: 10px; cursor: pointer; border-bottom: 1px solid #222;">
+                        <div>
+                            <input type="radio" name="tuning_type" value="base" checked onchange="updatePrice(1)">
+                            <span style="color: #fff; margin-left: 10px; font-weight: bold;">Base (Сток)</span>
+                        </div>
+                        <span style="color: #666;">+0 ₽</span>
+                    </label>
 
-            <div style="background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid #222; margin-bottom: 2rem;">
-                <h3 style="color: var(--neon-purple); margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Спецификация</h3>
-                <ul style="list-style: none; padding: 0; color: #ccc; font-size: 1.1rem;">
-                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
-                        <span style="color: #777;">Мощность</span>
-                        <span>{{ car.engine_power }} л.с.</span>
-                    </li>
-                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
-                        <span style="color: #777;">Пробег</span>
-                        <span>{{ car.mileage }} км</span>
-                    </li>
-                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
-                        <span style="color: #777;">Цвет</span>
-                        <span>{{ car.color }}</span>
-                    </li>
-                     <li style="display: flex; justify-content: space-between; padding: 10px 0;">
-                        <span style="color: #777;">Категория</span>
-                        <span>{{ car.category.name }}</span>
-                    </li>
-                </ul>
-            </div>
+                    <label class="tuning-option" style="display: flex; justify-content: space-between; padding: 10px; cursor: pointer; border-bottom: 1px solid #222;">
+                        <div>
+                            <input type="radio" name="tuning_type" value="standard" onchange="updatePrice(1.15)">
+                            <span style="color: #fff; margin-left: 10px; font-weight: bold;">Standard Tuning</span>
+                            <div style="font-size: 0.8rem; color: #888; margin-left: 28px;">Б/У детали, Stage 1</div>
+                        </div>
+                        <span style="color: var(--neon-blue);">+15%</span>
+                    </label>
+
+                    <label class="tuning-option" style="display: flex; justify-content: space-between; padding: 10px; cursor: pointer;">
+                        <div>
+                            <input type="radio" name="tuning_type" value="premium" onchange="updatePrice(1.30)">
+                            <span style="color: var(--neon-purple); margin-left: 10px; font-weight: bold;">Premium Tuning</span>
+                            <div style="font-size: 0.8rem; color: #888; margin-left: 28px;">Новые детали, Stage 2/3</div>
+                        </div>
+                        <span style="color: var(--neon-purple);">+30%</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="display: block; width: 100%; text-align: center; padding: 18px; font-size: 1.2rem; margin-bottom: 3rem; cursor: pointer; border: none;">
+                    Добавить в корзину
+                </button>
+            </form>
+
+            <script>
+                // Используем фильтр |default:"0", чтобы JS не сломался, если цены нет
+                // И оборачиваем в кавычки, чтобы VS Code видел это как строку, а затем парсим в число
+                const basePrice = parseFloat("{{ car.price|default:'0' }}");
+                
+                function updatePrice(multiplier) {
+                    if (!basePrice) return;
+
+                    const newPrice = Math.floor(basePrice * multiplier);
+                    
+                    // Форматируем для отображения
+                    const formattedPrice = new Intl.NumberFormat('ru-RU').format(newPrice) + ' ₽';
+                    
+                    const priceElement = document.getElementById('dynamic-price');
+                    if (priceElement) {
+                        priceElement.innerText = formattedPrice;
+                        // Меняем цвета в зависимости от комплектации
+                        priceElement.style.color = multiplier >= 1.3 ? '#bc13fe' : (multiplier > 1 ? '#00f3ff' : '#fff');
+                    }
+                }
+            </script>
 
             <div style="margin-bottom: 2rem;">
                 <h3 style="font-size: 1.5rem; border-left: 3px solid var(--neon-blue); padding-left: 1rem; margin-bottom: 1rem;">Детали тюнинга</h3>

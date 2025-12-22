@@ -19,23 +19,59 @@
                 </thead>
                 <tbody>
                     {% for item in cart.items.all %}
-                    <tr style="border-bottom: 1px solid #222;">
-                        <td style="padding: 15px 10px;">
-                            <strong style="color: var(--neon-blue);">{{ item.car.brand }}</strong> {{ item.car.model }}
+                    <tr style="border-bottom: 1px solid #333;">
+                        
+                        <td style="padding: 15px; width: 100px;">
+                            {% if item.car.main_image %}
+                                <img src="{{ item.car.main_image.url }}" alt="{{ item.car.brand }}" style="width: 80px; border-radius: 8px;">
+                            {% else %}
+                                <div style="width: 80px; height: 50px; background: #333; border-radius: 8px;"></div>
+                            {% endif %}
                         </td>
-                        <td style="padding: 15px 10px;">{{ item.car.price }} ₽</td>
-                        <td style="padding: 15px 10px;">{{ item.quantity }}</td>
-                        <td style="padding: 15px 10px;">
-                            <a href="{% url 'remove_from_cart' item.id %}" style="color: #ff4444; text-decoration: none;">Удалить</a>
+
+                        <td style="padding: 15px 20px;">
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 5px;">
+                                <div>
+                                    <strong style="color: #fff; font-size: 1.1rem;">{{ item.car.brand }} {{ item.car.model }}</strong>
+                                    <span style="color: #666; font-size: 0.8rem; margin-left: 10px;">(База)</span>
+                                </div>
+                                <div style="color: #888; font-size: 0.95rem;">
+                                    {{ item.car.price }} ₽
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="color: var(--neon-blue);">
+                                    <span style="color: #aaa;">Комплектация:</span> {{ item.get_tuning_type_display }} 
+                                    <span style="color: #666; font-size: 0.8rem;">(x{{ item.quantity }})</span>
+                                </div>
+                                <div style="font-weight: bold; font-size: 1.1rem; color: var(--neon-blue);">
+                                    {{ item.get_total_item_price }} ₽
+                                </div>
+                            </div>
+
+                        </td>
+
+                        <td style="padding: 15px; text-align: center;">
+                            x {{ item.quantity }}
+                        </td>
+
+                        <td style="padding: 15px; text-align: center;">
+                            <a href="{% url 'remove_from_cart' item.id %}" style="color: #ff4444; text-decoration: none; font-size: 0.9rem;">Удалить</a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
-            <div style="margin-top: 2rem; text-align: right;">
-                <h3 style="font-size: 2rem;">Итого: <span style="color: var(--neon-blue);">{{ cart.get_total_price }} ₽</span></h3>
-                <a href="{% url 'checkout' %}" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Оформить заказ</a>
+            <div style="margin-top: 2rem; text-align: right; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                <h3 style="color: #888; margin-bottom: 0.5rem; font-size: 1rem; text-transform: uppercase;">Итого к оплате:</h3>
+                <h2 style="color: #fff; font-size: 2.5rem; margin: 0;">{{ cart.get_total_price }} ₽</h2>
+                
+                <a href="{% url 'checkout' %}" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-block; padding: 15px 40px;">
+                    Оформить заказ 
+                </a>
             </div>
         </div>
     {% else %}

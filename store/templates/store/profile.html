@@ -24,6 +24,11 @@
             <ul style="list-style: none; padding: 0; color: #ccc;">
                 {% for item in order.items.all %}
                 <li style="margin-bottom: 5px;">
+                    &bull; {{ item.car.brand }} {{ item.car.model }} 
+                    <span style="color: #666; font-size: 0.9rem;">({{ item.get_tuning_type_display }})</span> 
+                    — {{ item.price }} ₽
+                </li>
+                <li style="margin-bottom: 5px;">
                     &bull; {{ item.car.brand }} {{ item.car.model }} — {{ item.price }} ₽
                 </li>
                 {% endfor %}
