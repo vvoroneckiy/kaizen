@@ -53,3 +53,81 @@ python manage.py createsuperuser
 # 5. Запустить сервер
 python manage.py runserver
 
+erDiagram
+    auth_user ||--|| Profile : "1:1"
+    auth_user ||--o{ Cart : "1:1"
+    auth_user ||--o{ Order : "1:N"
+    Category ||--o{ Car : "1:N"
+    Cart ||--o{ CartItem : "1:N"
+    Car ||--o{ CartItem : "1:N"
+    Order ||--o{ OrderItem : "1:N"
+    Car ||--o{ OrderItem : "1:N"
+
+    auth_user {
+        int id PK
+        string username
+        string email
+    }
+
+    Profile {
+        int id PK
+        int user_id FK
+        string phone
+    }
+
+    Category {
+        int id PK
+        string name
+        string slug
+        string image
+    }
+
+    Car {
+        int id PK
+        int category_id FK
+        string brand
+        string model
+        string country
+        string slug
+        int year
+        string color
+        string body_type
+        int mileage
+        int engine_power
+        text tuning_details
+        decimal price
+        text description
+        string main_image
+        bool is_available
+        datetime created_at
+    }
+
+    Cart {
+        int id PK
+        int user_id FK
+        datetime created_at
+    }
+
+    CartItem {
+        int id PK
+        int cart_id FK
+        int car_id FK
+        int quantity
+        string tuning_type
+    }
+
+    Order {
+        int id PK
+        int user_id FK
+        datetime created_at
+        string status
+        decimal total_price
+    }
+
+    OrderItem {
+        int id PK
+        int order_id FK
+        int car_id FK
+        decimal price
+        string tuning_type
+    }
