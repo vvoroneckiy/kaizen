@@ -54,4 +54,4 @@ python manage.py createsuperuser
 python manage.py runserver
 
 <!-- Скриншот: Главная страница -->
-<img width="1093" height="616" alt="image" src="https://github.com/user-attachments/assets/255d5539-c647-4cb4-aa74-d1d9647ccf2e" />
+![Моя картинка](photo_2026-01-20_22-58-26.jpg)
