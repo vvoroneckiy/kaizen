@@ -53,4 +53,4 @@ python manage.py createsuperuser
 # 5. Запустить сервер
 python manage.py runserver
 
-![Моя картинка](photo_2026-01-20_22-58-26.jpg)
+![Скриншот: Главная страница](photo_2026-01-20_22-58-26.jpg)
