@@ -49,7 +49,7 @@ pip install django pillow
 python manage.py createsuperuser
 
 # 5. Запустить сервер
-python manage.py runserver
+py manage.py runserver
 
 Скриншоты сайта можно увидеть на кортинках "главная страница", "каталог", "корзина" и "лк".
 ER-диаграмму на скриншоте "ER-диаграмма", а архитектурную схему на скриншоте "Архитектурная схема".
