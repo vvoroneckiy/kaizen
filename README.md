@@ -34,17 +34,16 @@ Kaizen — это современный онлайн-магазин, специ
 
 ```bash
 # 1. Клонировать репозиторий
-git clone https://github.com/ваш-логин/kaizen.git
+git clone https://github.com/vvoroneckiy/kaizen.git
 cd kaizen
 
 # 2. Создать и активировать виртуальное окружение
 python -m venv venv
-venv\Scripts\activate        # Windows
+source venv/Scripts/activate        # Windows
 # source venv/bin/activate   # Linux/macOS
 
-
-# 3. Выполнить миграции
-python manage.py migrate
+# 3. Скачать джанго (это нужно сделать только один раз в самом начале)
+pip install django pillow
 
 # 4. (Опционально) Создать суперпользователя для доступа к админке
 python manage.py createsuperuser
