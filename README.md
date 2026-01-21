@@ -38,7 +38,7 @@ git clone https://github.com/vvoroneckiy/kaizen.git
 cd kaizen
 
 # 2. Создать и активировать виртуальное окружение
-python -m venv venv
+py -m venv venv
 source venv/Scripts/activate        # Windows
 # source venv/bin/activate   # Linux/macOS
 
@@ -46,7 +46,7 @@ source venv/Scripts/activate        # Windows
 pip install django pillow
 
 # 4. (Опционально) Создать суперпользователя для доступа к админке
-python manage.py createsuperuser
+py manage.py createsuperuser
 
 # 5. Запустить сервер
 py manage.py runserver
